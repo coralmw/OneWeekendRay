@@ -55,11 +55,19 @@ inline vec3 operator*(const vec3 &v1, const float val){
   return vec3(v1.e[0] * val, v1.e[1] * val, v1.e[2] * val);
 }
 
+inline vec3 operator*(const float val, const vec3 &v1){
+  return vec3(v1.e[0] * val, v1.e[1] * val, v1.e[2] * val);
+}
+
 inline vec3 operator/(const vec3 &v1, const vec3 &v2){
   return vec3(v1.e[0] / v2.e[0], v1.e[1] / v2.e[1], v1.e[2] / v2.e[2]);
 }
 
 inline vec3 operator/(const vec3 &v1, const float val){
+  return vec3(v1.e[0] / val, v1.e[1] / val, v1.e[2] / val);
+}
+
+inline vec3 operator/(const float val, const vec3 &v1){
   return vec3(v1.e[0] / val, v1.e[1] / val, v1.e[2] / val);
 }
 
