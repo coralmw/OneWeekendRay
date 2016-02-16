@@ -24,9 +24,9 @@ vec3 color(const ray& r, hitable *world, int depth) {
 }
 
 int main() {
-  int nx = 1000;
-  int ny = 500;
-  int ns = 50;
+  int nx = 3000;
+  int ny = 1500;
+  int ns = 500;
   std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
   vec3 lower_left_corner(-2.0, -1.0, -1.0);
@@ -34,11 +34,14 @@ int main() {
   vec3 vertical(0.0, 2.0, 0.0);
   vec3 origin(0.0, 0.0, 0.0);
 
-  hitable *list[2];
+  hitable *list[4];
 
   list[0] = new sphere(vec3(0,0,-1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
-  list[1] = new sphere(vec3(0,-100.5,-1), 100, new lambertian(vec3(0.8, 0.3, 0.3)));
-  hitable *world = new hitable_list(list,2);
+  list[2] = new sphere(vec3(1,0,-1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
+  list[3] = new sphere(vec3(-1,0,-1), 0.5, new metal(vec3(0.8, 0.3, 0.3), 0.1));
+
+  list[1] = new sphere(vec3(0,-100.5,-1), 100, new metal(vec3(0.8, 0.7, 0.3), 0.5));
+  hitable *world = new hitable_list(list,4);
   camera cam;
 
   for (int j = ny-1; j >= 0; j--){
@@ -53,7 +56,7 @@ int main() {
         col = col + color(r, world, 0);
       }
       col = col / float(ns);
-      col = vec3( sqrt(col[0]), sqrt(col[1]), sqrt(col[2]));
+      col = vec3( sqrt(col[0]), sqrt(col[1]), sqrt(col[2])); // gamma one-half
       int ir = int(255.99*col[0]);
       int ig = int(255.99*col[1]);
       int ib = int(255.99*col[2]);
