@@ -15,6 +15,18 @@ vec3 reflect(const vec3& v, const vec3& n) {
   return v - 2*dot(v,n)*n;
 }
 
+bool refract(const vec3& v, const vec3& n, float ni_over_nt, vec3& refracted){
+  vec3 uv = unit_vector(v);
+  float dt = dot(uv, n);
+  float discrim = 1.0 - ni_over_nt*ni_over_nt*(1-dt*dt);
+  if (discrim > 0) {
+    refracted = ni_over_nt*(v - n*dt) - n*sqrt(discrim);
+    return true;
+  } else {
+    return false;
+  }
+}
+
 class material {
   public:
     virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const = 0;
@@ -48,6 +60,36 @@ public:
 
   vec3 albedo;
   float fuzz;
+};
+
+class diaelectric : public material {
+public:
+  diaelectric(float ri): ref_idx(ri) {}
+  virtual bool scatter(const ray& r_in, const hit_record& rec, vec3& attenuation, ray& scattered) const {
+    vec3 outward_normal;
+    vec3 reflected = reflect(r_in.direction(), rec.normal);
+    float ni_over_nt;
+    attenuation = vec3(1.0, 1.0, 1.0);
+    vec3 refracted;
+    if (dot(r_in.direction(), rec.normal) > 0) {
+      outward_normal = -rec.normal;
+      ni_over_nt = ref_idx;
+    } else {
+      outward_normal = rec.normal;
+      ni_over_nt = 1.0 / ref_idx;
+    }
+
+    if (refract(r_in.direction(), outward_normal, ni_over_nt, refracted)) {
+      scattered = ray(rec.p, reflected);
+    } else {
+      scattered = ray(rec.p, reflected);
+      return true;
+    }
+
+    return true;
+  }
+
+  float ref_idx;
 };
 
 #endif
