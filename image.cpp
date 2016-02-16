@@ -24,9 +24,9 @@ vec3 color(const ray& r, hitable *world, int depth) {
 }
 
 int main() {
-  int nx = 300;
-  int ny = 150;
-  int ns = 500;
+  int nx = 600;
+  int ny = 300;
+  int ns = 10;
   std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
   vec3 lower_left_corner(-2.0, -1.0, -1.0);
@@ -39,7 +39,7 @@ int main() {
   list[0] = new sphere(vec3(0,0,-1), 0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
 
   list[2] = new sphere(vec3(1,0,-1), 0.5, new diaelectric(1.5));
-  list[4] = new sphere(vec3(1,0,-1), 0.4, new metal(vec3(0.8, 0.3, 0.3), 0.1));
+  list[4] = new sphere(vec3(0.5,1.5,-1), 0.4, new metal(vec3(0.1, 0.1, 0.8), 0.1));
 
   list[3] = new sphere(vec3(-1,0,-1), 0.5, new metal(vec3(0.8, 0.3, 0.3), 0.1));
 
