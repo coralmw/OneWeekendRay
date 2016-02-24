@@ -72,6 +72,13 @@ int fill(hitable *l[]){
         getline(&curr_line, &nbytes, stdin);
         sscanf(curr_line, "%f %f %f %f %f %f %f", &x, &y, &z, &size, &lx, &ly, &lz);
         l[i] = new sphere(vec3(x,y,z), size, new lambertian(vec3(lx,ly,lz)));
+      } else if (strncmp("metal", curr_line, 5)  == 0) {
+        float x, y, z;
+        float lx, ly, lz;
+        float size;
+        getline(&curr_line, &nbytes, stdin);
+        sscanf(curr_line, "%f %f %f %f %f %f %f", &x, &y, &z, &size, &lx, &ly, &lz);
+        l[i] = new sphere(vec3(x,y,z), size, new metal(vec3(lx,ly,lz), 0.05));      
       }
     }
 
