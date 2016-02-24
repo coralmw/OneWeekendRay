@@ -1,4 +1,9 @@
 #include <iostream>
+#include <fstream>      // std::ofstream
+
+#include <string.h>
+#include <stdio.h>
+
 #include "camera.h"
 #include "material.h"
 #include "sphere.h"
