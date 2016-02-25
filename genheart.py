@@ -60,6 +60,7 @@ class Sphere(mass):
         closest_point = (bouncepts.transpose()[sortidx])[0]
         distance = dabs[sortidx][0]
 
+        # balls bounce off the bottom edge
         if distance <= self.r:
             print 'bounce'
             plt.plot(*closest_point, marker='o', linestyle='', color='purple')
@@ -69,6 +70,7 @@ class Sphere(mass):
             # w = self.velocity - u
             # self.velocity = w - u
 
+        # force balls to stay inside heart
         if self.position[1] < closest_point[1]:
             self.velocity[1] = 0.
             self.position[1] = closest_point[1]
@@ -116,7 +118,7 @@ def render(i, spheres):
     p.communicate(''.join(c))
 
 
-for i in range(200):
+for i in range(400):
 
     render(i, spheres)
 
@@ -126,9 +128,10 @@ for i in range(200):
         for _ in range(200):
             sphere.update(spheres)
 
-    if i%10 == 0:
-        spheres += [Sphere(x=x, y=y) for x, y in np.array([np.random.normal(loc=0, scale=0.5, size=(N,)),
-                                                          np.random.normal(loc=HEIGHT, scale=3, size=(N,))]).transpose()]
+    if i%10 == 0 and i<=50:
+        spheres += [Sphere(x=x, y=y, r=r) for x, y, r in np.array([np.random.normal(loc=0, scale=0.5, size=(N,)),
+                                                                  np.random.normal(loc=HEIGHT, scale=3, size=(N,)),
+                                                                  np.random.normal(loc=0.2, scale=0.01, size=(N,))]).transpose()]
 
 
 

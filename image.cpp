@@ -88,9 +88,9 @@ int fill(hitable *l[]){
 
 int main(int argc, char* argv[]) {
   std::ofstream outfile(argv[1], std::ofstream::out);
-  int nx = 200;
-  int ny = 150;
-  int ns = 15;
+  int nx = 450;
+  int ny = 300;
+  int ns = 50;
   outfile << "P3\n" << nx << " " << ny << "\n255\n";
 
   vec3 lower_left_corner(-2.0, -1.0, -1.0);
