@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import subprocess
 
-DT = 0.0001
+DT = 0.001
 G = 0.1
 N = 10
 HEIGHT = 20
@@ -69,14 +69,20 @@ class Sphere(mass):
             # w = self.velocity - u
             # self.velocity = w - u
 
+        if self.position[1] < closest_point[1]:
+            self.velocity[1] = 0.
+            self.position[1] = closest_point[1]
+
         for sphere in spheres:
             if self is sphere:
                 pass
             else:
                 v = self.position - sphere.position
+
                 distance = np.sqrt(v[0]**2 + v[1]**2)
                 if distance < (self.r + sphere.r):
-                    self.velocity = bounce(self.velocity, v, 0.9)
+                    deltav = self.velocity - sphere.velocity
+                    self.velocity += bounce(deltav, v, 1)
                     # accell = intersection*0.25*v
                     # self.velocity += self.mass*accell
 
@@ -85,22 +91,18 @@ class Sphere(mass):
         elif self.position[0]+self.r  < -max(heartpts[0]):
             self.velocity = bounce(self.velocity, np.array([1., 0.]), 0.95)
 
-        # print 'closest pt:',closest_point
-        #
-        # plt.plot(*closest_point, marker='o', linestyle='', color='purple')
-        # plt.plot(np.linspace(-1, 1, len(dabs)),dabs, color='purple' )
-
+        self.velocity *= (1 - self.r/2.)
 
 origin = np.random.normal
 
-spheres = [Sphere(x=x, y=y) for x, y in np.array([np.random.normal(loc=0, scale=0.5, size=(N,)),
-                                                  np.random.normal(loc=HEIGHT, scale=3, size=(N,))]).transpose()]
+spheres = [Sphere(x=x, y=y, r=r) for x, y, r in np.array([np.random.normal(loc=0, scale=0.5, size=(N,)),
+                                                          np.random.normal(loc=HEIGHT, scale=3, size=(N,)),
+                                                          np.random.normal(loc=0.2, scale=0.03, size=(N,))]).transpose()]
 
 print spheres
 
-for i in range(1500):
+def render(i, spheres):
     p = subprocess.Popen('./a.out anim/im{}.ppm'.format(i), shell=True, stdin=subprocess.PIPE)
-
     c = []
 
     for sphere in spheres:
@@ -113,9 +115,15 @@ for i in range(1500):
     c.insert(0, '{}\n'.format(len(spheres)))
     p.communicate(''.join(c))
 
-    plt.plot(*zip(*[sphere.position.copy() for sphere in spheres]), marker='o', linestyle='', color='b')
+
+for i in range(200):
+
+    render(i, spheres)
+
+    # plt.plot(*zip(*[sphere.position.copy() for sphere in spheres]), marker='o', linestyle='', color='b')
+
     for sphere in spheres:
-        for _ in range(100):
+        for _ in range(200):
             sphere.update(spheres)
 
     if i%10 == 0:
@@ -130,9 +138,9 @@ for i in range(1500):
 #   y = 13*np.cos(u) - 5*np.cos(2*u) - 2*np.cos(3*u)  - np.cos(4*u)
 #   return np.array([x/10, y/10])
 #
-plt.plot(heartpts[0], heartpts[1], color='red')
+# plt.plot(heartpts[0], heartpts[1], color='red')
 #
 #
 # # plt.xlim([-10, 10])
 # # plt.ylim([-10, 10])
-plt.show()
+# plt.show()
