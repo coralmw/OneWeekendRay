@@ -78,7 +78,7 @@ int fill(hitable *l[]){
         float size;
         getline(&curr_line, &nbytes, stdin);
         sscanf(curr_line, "%f %f %f %f %f %f %f", &x, &y, &z, &size, &lx, &ly, &lz);
-        l[i] = new sphere(vec3(x,y,z), size, new metal(vec3(lx,ly,lz), 0.05));      
+        l[i] = new sphere(vec3(x,y,z), size, new metal(vec3(lx,ly,lz), 0.05));
       }
     }
 
@@ -88,9 +88,9 @@ int fill(hitable *l[]){
 
 int main(int argc, char* argv[]) {
   std::ofstream outfile(argv[1], std::ofstream::out);
-  int nx = 600;
-  int ny = 300;
-  int ns = 20;
+  int nx = 400;
+  int ny = 250;
+  int ns = 75;
   outfile << "P3\n" << nx << " " << ny << "\n255\n";
 
   vec3 lower_left_corner(-2.0, -1.0, -1.0);
@@ -102,7 +102,7 @@ int main(int argc, char* argv[]) {
   int num_objs = fill(list);
 
   hitable *world = new hitable_list(list,num_objs);
-  camera cam(vec3(0,0,-4), vec3(0,0,-1), vec3(0,1,0), 45, float(nx)/float(ny));
+  camera cam(vec3(0,0,-20), vec3(0,0,-1), vec3(0,1,0), 90, float(nx)/float(ny));
 
   for (int j = ny-1; j >= 0; j--){
     for (int i = 0; i < nx; i++) {
